@@ -1342,6 +1342,7 @@ ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${worker_3_ip}
   sudo apt-get -y install socat conntrack ipset
 }
 ```
+![](./images/worker-os-dependencies.png)
 
 
 ### We need to test if swap is already enabled on the host and disable it with (sudo swapoff -a ) if it is:
@@ -1360,6 +1361,7 @@ sudo swapon --show
   https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz \
   https://github.com/containerd/containerd/releases/download/v1.4.4/containerd-1.4.4-linux-amd64.tar.gz 
 ```
+![](./images/workers-download-containerd.png)
 ### Configure containerd:
 ```
 {
@@ -1372,6 +1374,8 @@ sudo swapon --show
   sudo mv containerd/bin/* /bin/
 }
 ```
+![](./images/worker-configure-containerd.png)
+
 ### sudo mkdir -p /etc/containerd/
 ```
 cat << EOF | sudo tee /etc/containerd/config.toml
@@ -1425,6 +1429,8 @@ sudo mkdir -p \
 wget -q --show-progress --https-only --timestamping \
   https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz
 ```
+
+
 ### Install CNI into /opt/cni/bin/
 ```
 sudo tar -xvf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin/
@@ -1450,6 +1456,10 @@ Output:
 ./bandwidth
 
 ```
+![](./images/workers-install-cni.png)
+
+![](./images/workers-list-cni-bin.png)
+
 ### Download binaries for kubectl, kube-proxy, and kubelet
 ```
 wget -q --show-progress --https-only --timestamping \
@@ -1465,6 +1475,8 @@ wget -q --show-progress --https-only --timestamping \
 }
 
 ```
+![](./images/workers-kubelet-kubeproxy-kubectl.png)
+
 ### Configure the worker nodes components
 
 
@@ -1576,6 +1588,8 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+![](./images/worker-conf-kubelet-systemd.png)
+
 ### Create the kube-proxy.yaml file
 ```
 cat <<EOF | sudo tee /var/lib/kube-proxy/kube-proxy-config.yaml
